@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  node:
+    build:
+      context: .
+    image: "cghdev/node"
+    container_name: "node01"
+    ports:
+      - '3000:3000'
+    depends_on:
+      - maria01
+    volumes:
+      - .:/usr/src/node-app
+    networks:
+      - default
+
+  maria01:
+    build:
+      context: docker/mariadb
+      dockerfile: Dockerfile
+    image: "cghdev/mariadb"
+    container_name: "maria01"
+    ports:
+      - "3306:3306"
+    environment:
+      - "MYSQL_ROOT_PASSWORD=3point142"
+    volumes:
+      - dbdata:/var/lib/mysql/
+    networks:
+      - default
+
+volumes:
+  dbdata:
+
+networks:
+  default:
+    driver: bridge
